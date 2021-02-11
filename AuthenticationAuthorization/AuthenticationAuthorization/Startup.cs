@@ -108,7 +108,7 @@ namespace AuthenticationAuthorization
     }
 
     /// <summary>
-    /// Data Tranfer Object 
+    /// Data Transfer Object 
     /// </summary>
     public class ClaimDto
     {
