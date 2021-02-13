@@ -39,6 +39,7 @@ namespace AuthenticationAuthorization
                     content += "<a href=\"/Login\">로그인</a><br />";
                     content += "<a href=\"/Info\">정보</a><br />";
                     content += "<a href=\"/InfoJson\">정보(JSON)</a><br />";
+                    content += "<a href=\"/Logout\">로그아웃</a><br />";
 
                     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
                     await context.Response.WriteAsync(content);
@@ -99,10 +100,19 @@ namespace AuthenticationAuthorization
                         json += "{}";
                     }
 
-                    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                    // MIME 타입
+                    context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
                     await context.Response.WriteAsync(json);
-                });  
+                });
                 #endregion
+
+                endpoints.MapGet("/Logout", async context => 
+                {
+                    await context.SignOutAsync("Cookies");
+                    
+                    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+                    await context.Response.WriteAsync("<h3>로그아웃 완료</h3>");
+                });
             });
         }
     }
