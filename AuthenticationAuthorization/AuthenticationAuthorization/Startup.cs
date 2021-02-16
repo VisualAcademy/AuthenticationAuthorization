@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
@@ -18,7 +20,10 @@ namespace AuthenticationAuthorization
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication("Cookies").AddCookie();
+            services.AddControllers();
+
+            //services.AddAuthentication("Cookies").AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,9 +35,12 @@ namespace AuthenticationAuthorization
 
             app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization(); 
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapDefaultControllerRoute(); 
+
                 #region Menu
                 endpoints.MapGet("/", async context =>
                 {
@@ -45,13 +53,17 @@ namespace AuthenticationAuthorization
                     content += "<a href=\"/InfoDetails\">정보(Details)</a><br />";
                     content += "<a href=\"/InfoJson\">정보(JSON)</a><br />";
                     content += "<a href=\"/Logout\">로그아웃</a><br />";
+                    content += "<hr /><a href=\"/Landing\">랜딩페이지</a><br />";
+                    content += "<a href=\"/Greeting\">환영페이지</a><br />";
+                    content += "<a href=\"/Dashboard\">관리페이지</a><br />";
+                    content += "<a href=\"/api/AuthService\">로그인 정보(JSON)</a><br />";
 
                     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
                     await context.Response.WriteAsync(content);
                 }); 
                 #endregion
 
-                #region /Login/{Username}
+                #region Login/{Username}
                 endpoints.MapGet("/Login/{Username}", async context =>
                 {
                     var username = context.Request.RouteValues["Username"].ToString(); 
@@ -173,7 +185,7 @@ namespace AuthenticationAuthorization
                 });
                 #endregion
 
-                #region 로그아웃
+                #region Logout
                 endpoints.MapGet("/Logout", async context =>
                 {
                     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -185,6 +197,7 @@ namespace AuthenticationAuthorization
         }
     }
 
+    #region DTO
     /// <summary>
     /// Data Transfer Object 
     /// </summary>
@@ -192,5 +205,40 @@ namespace AuthenticationAuthorization
     {
         public string Type { get; set; }
         public string Value { get; set; }
+    } 
+    #endregion
+
+    #region MVC Controller
+    [AllowAnonymous]
+    public class LandingController : Controller
+    {
+        public IActionResult Index() => Content("누구나 접근 가능");
+
+        [Authorize]
+        [Route("/Greeting")]
+        public IActionResult Greeting()
+        {
+            var roleName = HttpContext.User.IsInRole("Administrators") ? "관리자" : "사용자";
+            return Content($"<em>{roleName}</em> 님, 반갑습니다.", "text/html", Encoding.Default);
+        }
     }
+
+    [Authorize(Roles = "Administrators")]
+    public class DashboardController : Controller
+    {
+        public IActionResult Index() => Content("관리자 님, 반갑습니다.");
+    }
+    #endregion
+
+    #region Web API Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthServiceController : ControllerBase
+    {
+        [Authorize]
+        [HttpGet]
+        public IEnumerable<ClaimDto> Get() =>
+            HttpContext.User.Claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value });
+    } 
+    #endregion
 }
