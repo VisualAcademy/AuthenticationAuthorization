@@ -71,7 +71,7 @@ namespace AuthenticationAuthorization
                     {
                         new Claim(ClaimTypes.NameIdentifier, username),
                         new Claim(ClaimTypes.Name, username),
-                        new Claim(ClaimTypes.Email, username + "@a.com"),
+                        new Claim(ClaimTypes.Email, username.ToLower() + "@youremail.com"),
                         new Claim(ClaimTypes.Role, "Users"),
                         new Claim("원하는 이름", "원하는 값")
                     };
