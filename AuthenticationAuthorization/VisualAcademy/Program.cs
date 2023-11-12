@@ -50,8 +50,8 @@ app.MapGet("/", async context =>
 #region Login/{Username}
 app.MapGet("/Login/{Username}", async context =>
 {
-var username = context.Request.RouteValues["Username"].ToString();
-var claims = new List<Claim>
+    var username = context.Request.RouteValues["Username"].ToString();
+    var claims = new List<Claim>
 {
         new Claim(ClaimTypes.NameIdentifier, username),
         new Claim(ClaimTypes.Name, username),
@@ -60,102 +60,102 @@ var claims = new List<Claim>
         new Claim("원하는 이름", "원하는 값")
 };
 
-if (username == "Administrator")
-{
-claims.Add(new Claim(ClaimTypes.Role, "Administrators"));
-}
+    if (username == "Administrator")
+    {
+        claims.Add(new Claim(ClaimTypes.Role, "Administrators"));
+    }
 
-var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties { IsPersistent = true });
-context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-await context.Response.WriteAsync("<h3>로그인 완료</h3>");
+    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties { IsPersistent = true });
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync("<h3>로그인 완료</h3>");
 });
 #endregion
 
 #region Login
 app.MapGet("/Login", async context =>
 {
-var claims = new List<Claim>
+    var claims = new List<Claim>
 {
         new Claim(ClaimTypes.Name, "아이디")
 };
 
-var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-await context.Response.WriteAsync("<h3>로그인 완료</h3>");
+    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync("<h3>로그인 완료</h3>");
 });
 #endregion
 
 #region InfoDetails
 app.MapGet("/InfoDetails", async context =>
 {
-string result = "";
+    string result = "";
 
-if (context.User.Identity.IsAuthenticated)
-{
-result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
-foreach (var claim in context.User.Claims)
-{
-    result += $"{claim.Type} = {claim.Value}<br />";
-}
-if (context.User.IsInRole("Administrators") && context.User.IsInRole("Users"))
-{
-    result += "<br />Administrators + Users 권한이 있습니다.<br />";
-}
-}
-else
-{
-result += "<h3>로그인하지 않았습니다.</h3>";
-}
+    if (context.User.Identity.IsAuthenticated)
+    {
+        result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
+        foreach (var claim in context.User.Claims)
+        {
+            result += $"{claim.Type} = {claim.Value}<br />";
+        }
+        if (context.User.IsInRole("Administrators") && context.User.IsInRole("Users"))
+        {
+            result += "<br />Administrators + Users 권한이 있습니다.<br />";
+        }
+    }
+    else
+    {
+        result += "<h3>로그인하지 않았습니다.</h3>";
+    }
 
-context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-await context.Response.WriteAsync(result, Encoding.Default);
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync(result, Encoding.Default);
 });
 #endregion
 
 #region Info
 app.MapGet("/Info", async context =>
 {
-string result = "";
+    string result = "";
 
-if (context.User.Identity.IsAuthenticated)
-{
-result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
-}
-else
-{
-result += "<h3>로그인하지 않았습니다.</h3>";
-}
+    if (context.User.Identity.IsAuthenticated)
+    {
+        result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
+    }
+    else
+    {
+        result += "<h3>로그인하지 않았습니다.</h3>";
+    }
 
-context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-await context.Response.WriteAsync(result, Encoding.Default);
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync(result, Encoding.Default);
 });
 #endregion
 
 #region InfoJson
 app.MapGet("/InfoJson", async context =>
 {
-string json = "";
+    string json = "";
 
-if (context.User.Identity.IsAuthenticated)
-{
-var claims = context.User.Claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value });
-json += JsonSerializer.Serialize<IEnumerable<ClaimDto>>(
-    claims,
-    new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-}
-else
-{
-json += "{}";
-}
+    if (context.User.Identity.IsAuthenticated)
+    {
+        var claims = context.User.Claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value });
+        json += JsonSerializer.Serialize<IEnumerable<ClaimDto>>(
+            claims,
+            new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+    }
+    else
+    {
+        json += "{}";
+    }
 
     // MIME 타입을 JSON 형식으로 변경 
-context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
-await context.Response.WriteAsync(json);
-}); 
+    context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
+    await context.Response.WriteAsync(json);
+});
 #endregion
 
 #region Logout
@@ -196,7 +196,7 @@ public class LandingController : Controller
         var roleName = HttpContext.User.IsInRole("Administrators") ? "관리자" : "사용자";
         return Content($"<em>{roleName}</em> 님, 반갑습니다.", "text/html", Encoding.Default);
     }
-} 
+}
 
 [Authorize(Roles = "Administrators")]
 [Route("/Dashboard")]
