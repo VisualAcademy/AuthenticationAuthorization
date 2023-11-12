@@ -41,6 +41,8 @@ namespace AuthenticationAuthorization
             {
                 endpoints.MapDefaultControllerRoute(); 
 
+                // ASP.NET Core 8.0 버전 강의 소스는 현재 솔루션의 VisualAcademy 프로젝트의 Program.cs를 참고하세요.
+
                 #region Menu
                 endpoints.MapGet("/", async context =>
                 {
