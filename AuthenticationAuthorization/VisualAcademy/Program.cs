@@ -146,12 +146,15 @@ app.MapGet("/InfoJson", async context =>
     await context.Response.WriteAsync(json);
 });
 
+#region Logout
 app.MapGet("/Logout", async context =>
 {
+    //await context.SignOutAsync("Cookies");
     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
     await context.Response.WriteAsync("<h3>로그아웃 완료</h3>");
 });
+#endregion
 
 app.MapControllers();
 app.Run();
