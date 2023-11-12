@@ -52,13 +52,13 @@ app.MapGet("/Login/{Username}", async context =>
 {
     var username = context.Request.RouteValues["Username"].ToString();
     var claims = new List<Claim>
-{
-        new Claim(ClaimTypes.NameIdentifier, username),
-        new Claim(ClaimTypes.Name, username),
-        new Claim(ClaimTypes.Email, username.ToLower() + "@youremail.com"),
-        new Claim(ClaimTypes.Role, "Users"),
-        new Claim("원하는 이름", "원하는 값")
-};
+    {
+            new Claim(ClaimTypes.NameIdentifier, username),
+            new Claim(ClaimTypes.Name, username),
+            new Claim(ClaimTypes.Email, username.ToLower() + "@youremail.com"),
+            new Claim(ClaimTypes.Role, "Users"),
+            new Claim("원하는 이름", "원하는 값")
+    };
 
     if (username == "Administrator")
     {
@@ -77,9 +77,9 @@ app.MapGet("/Login/{Username}", async context =>
 app.MapGet("/Login", async context =>
 {
     var claims = new List<Claim>
-{
-        new Claim(ClaimTypes.Name, "아이디")
-};
+    {
+            new Claim(ClaimTypes.Name, "아이디")
+    };
 
     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
