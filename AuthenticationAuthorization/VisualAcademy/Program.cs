@@ -141,6 +141,7 @@ app.MapGet("/InfoJson", async context =>
         json += "{}";
     }
 
+    // MIME 타입을 JSON 형식으로 변경 
     context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
     await context.Response.WriteAsync(json);
 });
