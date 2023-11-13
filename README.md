@@ -1,19 +1,57 @@
-# AuthenticationAuthorization
+# ASP.NET Core 8.0 인증 및 권한 부여의 완전 가이드
 
-ASP.NET Core 인증과 권한
+이 GitHub 리포지토리는 ASP.NET Core 8.0을 사용하여 인증 및 권한 부여를 구현하는 방법에 대한 전체적인 가이드를 제공합니다. 본 가이드는 핸즈온랩 형식으로 구성되어 있으며, ASP.NET Core 8.0 Empty 프로젝트를 기반으로 단계별 실습을 진행할 수 있도록 설계되었습니다.
 
-다음 경로의 아티클과 동영상 강의에 대한 최종 소스 모음 리포지토리입니다. 
+## 리포지토리 정보
+이 리포지토리의 전체 소스 코드는 다음 링크에서 확인할 수 있습니다:
+- [AuthenticationAuthorization GitHub 리포지토리](https://github.com/VisualAcademy/AuthenticationAuthorization)
 
-https://dul.me/labs/aspnet-core-authentication-authorization/
+핸즈온랩을 진행할 때는 ASP.NET Core 8.0 Empty 프로젝트를 생성하고, `Program.cs` 파일에 이 문서 마지막 부분에 제공되는 전체 소스 코드를 참고하여 단계별로 연습합니다.
 
-## 강의 내용 
+## 강좌 내용
+본 강좌는 다음과 같은 주요 내용들을 다룹니다:
 
-1. Claim, ClaimsIdentity, ClaimsPrincipal 클래스로 최소한의 코드로 인증 쿠키 생성하기
-2. UseAuthentication 확장 메서드를 사용하여 인증된 사용자의 정보 가져오기
-3. JsonSerializer 클래스로 컬렉션 형태의 데이터를 JSON으로 변환하여 출력하기
-4. MIME 타입 변경 연습 및 SignOutAsync 메서드를 사용하여 로그아웃 기능 구현하기
-5. 로그인할 때 더 많은 Claim을 저장하고 IsInRole 메서드로 권한을 체크하는 방법 살펴보기
-6. 권한(Authorization) 관련 기능을 MVC와 Web API 컨트롤러에서 사용하기 데모
+### 1. 기본 설정 및 서비스 추가
+- ASP.NET Core 애플리케이션 설정 및 필요한 서비스 추가 방법
+- MVC 컨트롤러와 쿠키 기반 인증을 위한 메서드 사용
+
+### 2. 개발 환경 설정
+- 개발 환경에서의 오류 페이지 설정 및 디버깅 도구 사용 방법
+
+### 3. 라우팅 및 인증/권한 부여 설정
+- 라우팅 설정 및 인증/권한 부여 미들웨어의 기본 구성
+
+### 4. 엔드포인트 및 라우트 구현
+- 로그인, 정보 조회, 로그아웃 기능을 위한 엔드포인트 및 라우트 설정
+
+### 5. 사용자 인증 및 권한 부여
+- 사용자 인증 과정 및 `ClaimsPrincipal` 생성 방법
+- 관리자와 일반 사용자의 권한 구분 방법
+
+### 6. 인증 정보 확인 방법
+- 로그인한 사용자의 정보 확인 및 인증 여부 판단 방법
+
+### 7. 로그아웃 기능 구현
+- 사용자 로그아웃 기능 구현 방법
+
+### 8. 역할 기반 접근 제어 및 API 구현
+- 역할 기반의 접근 제어 및 API 컨트롤러 설정 방법
+
+## 동영상 강의
+본 강좌의 동영상 자료는 아래에서 확인할 수 있습니다:
+
+<!-- 유튜브 동영상 들어올 영역 -->
+
+## 강의 상세 내용
+본 동영상 강의에서는 다음과 같은 내용들을 자세히 다룹니다:
+1. `Claim`, `ClaimsIdentity`, `ClaimsPrincipal` 클래스를 사용하여 최소한의 코드로 인증 쿠키 생성하기
+2. `UseAuthentication` 확장 메서드를 사용하여 인증된 사용자의 정보 가져오기
+3. `JsonSerializer` 클래스로 컬렉션 형태의 데이터를 JSON으로 변환하여 출력하기
+4. MIME 타입 변경 연습 및 `SignOutAsync` 메서드를 사용하여 로그아웃 기능 구현하기
+5. 로그인 시 더 많은 `Claim` 저장 및 `IsInRole` 메서드로 권한 체크하는 방법 살펴보기
+6. 권한(Authorization) 관련 기능을 MVC와 Web API 컨트롤러에서 사용하는 데모
+
+이 가이드를 통해 ASP.NET Core 8.0에서 인증 및 권한 부여를 실제로 구현하는 방법을 자세히 배울 수 있습니다.
 
 ## ASP.NET Core 인증과 권한 관련 다음 강좌에 대한 소스 모음입니다.
 
