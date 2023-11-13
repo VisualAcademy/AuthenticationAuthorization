@@ -4,7 +4,7 @@ ASP.NET Core 인증과 권한
 
 다음 경로의 아티클과 동영상 강의에 대한 최종 소스 모음 리포지토리입니다. 
 
-https://dul.me/labs/aspnet-core-8-authentication-authorization-guide
+https://dul.me/labs/aspnet-core-authentication-authorization/
 
 ## 강의 내용 
 
