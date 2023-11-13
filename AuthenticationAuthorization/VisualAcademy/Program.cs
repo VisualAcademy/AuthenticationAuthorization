@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthorization(); // [Authorize] 특성 사용
 
 #region Menu
 // 엔드포인트 및 라우트 설정
