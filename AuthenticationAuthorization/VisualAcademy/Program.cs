@@ -171,7 +171,7 @@ app.MapGet("/Logout", async context =>
 });
 #endregion
 
-app.MapControllers();
+app.MapControllers(); // app.MapDefaultControllerRoute();
 app.Run();
 
 #region DTO
