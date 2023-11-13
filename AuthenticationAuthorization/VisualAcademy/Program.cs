@@ -9,12 +9,14 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//[1] Startup.ConfigureServices 영역 
 // 서비스 추가
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 var app = builder.Build();
 
+//[2] Startup.Configure 영역 
 // 개발 환경 설정
 if (app.Environment.IsDevelopment())
 {
