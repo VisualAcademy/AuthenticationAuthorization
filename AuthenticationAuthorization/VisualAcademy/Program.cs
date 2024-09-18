@@ -1,3 +1,4 @@
+// https://www.memoengine.com/labs/aspnet-core-8-0-getting-started/
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -9,15 +10,15 @@ using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//[1] Startup.ConfigureServices ¿µ¿ª 
-// ¼­ºñ½º Ãß°¡
+//[1] Startup.ConfigureServices ì˜ì—­ 
+// ì„œë¹„ìŠ¤ ì¶”ê°€
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
 var app = builder.Build();
 
-//[2] Startup.Configure ¿µ¿ª 
-// °³¹ß È¯°æ ¼³Á¤
+//[2] Startup.Configure ì˜ì—­ 
+// ê°œë°œ í™˜ê²½ ì„¤ì •
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -25,24 +26,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 app.UseAuthentication();
-app.UseAuthorization(); // [Authorize] Æ¯¼º »ç¿ë
+app.UseAuthorization(); // [Authorize] íŠ¹ì„± ì‚¬ìš©
 
 #region Menu
-// ¿£µåÆ÷ÀÎÆ® ¹× ¶ó¿ìÆ® ¼³Á¤
+// ì—”ë“œí¬ì¸íŠ¸ ë° ë¼ìš°íŠ¸ ì„¤ì •
 app.MapGet("/", async context =>
 {
-    string content = "<h1>ASP.NET Core ÀÎÁõ°ú ±ÇÇÑ ÃÊ°£´Ü ÄÚµå</h1>";
-    content += "<a href=\"/Login\">·Î±×ÀÎ</a><br />";
-    content += "<a href=\"/Login/User\">·Î±×ÀÎ(User)</a><br />";
-    content += "<a href=\"/Login/Administrator\">·Î±×ÀÎ(Administrator)</a><br />";
-    content += "<a href=\"/Info\">Á¤º¸</a><br />";
-    content += "<a href=\"/InfoDetails\">Á¤º¸(Details)</a><br />";
-    content += "<a href=\"/InfoJson\">Á¤º¸(JSON)</a><br />";
-    content += "<a href=\"/Logout\">·Î±×¾Æ¿ô</a><br />";
-    content += "<hr /><a href=\"/Landing\">·£µùÆäÀÌÁö</a><br />";
-    content += "<a href=\"/Greeting\">È¯¿µÆäÀÌÁö</a><br />";
-    content += "<a href=\"/Dashboard\">°ü¸®ÆäÀÌÁö</a><br />";
-    content += "<a href=\"/api/AuthService\">·Î±×ÀÎ Á¤º¸(JSON)</a><br />";
+    string content = "<h1>ASP.NET Core ì¸ì¦ê³¼ ê¶Œí•œ ì´ˆê°„ë‹¨ ì½”ë“œ</h1>";
+    content += "<a href=\"/Login\">ë¡œê·¸ì¸</a><br />";
+    content += "<a href=\"/Login/User\">ë¡œê·¸ì¸(User)</a><br />";
+    content += "<a href=\"/Login/Administrator\">ë¡œê·¸ì¸(Administrator)</a><br />";
+    content += "<a href=\"/Info\">ì •ë³´</a><br />";
+    content += "<a href=\"/InfoDetails\">ì •ë³´(Details)</a><br />";
+    content += "<a href=\"/InfoJson\">ì •ë³´(JSON)</a><br />";
+    content += "<a href=\"/Logout\">ë¡œê·¸ì•„ì›ƒ</a><br />";
+    content += "<hr /><a href=\"/Landing\">ëœë”©í˜ì´ì§€</a><br />";
+    content += "<a href=\"/Greeting\">í™˜ì˜í˜ì´ì§€</a><br />";
+    content += "<a href=\"/Dashboard\">ê´€ë¦¬í˜ì´ì§€</a><br />";
+    content += "<a href=\"/api/AuthService\">ë¡œê·¸ì¸ ì •ë³´(JSON)</a><br />";
 
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
     await context.Response.WriteAsync(content);
@@ -59,7 +60,7 @@ app.MapGet("/Login/{Username}", async context =>
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Email, username.ToLower() + "@youremail.com"),
             new Claim(ClaimTypes.Role, "Users"),
-            new Claim("¿øÇÏ´Â ÀÌ¸§", "¿øÇÏ´Â °ª")
+            new Claim("ì›í•˜ëŠ” ì´ë¦„", "ì›í•˜ëŠ” ê°’")
     };
 
     if (username == "Administrator")
@@ -71,7 +72,7 @@ app.MapGet("/Login/{Username}", async context =>
     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
     await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties { IsPersistent = true });
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-    await context.Response.WriteAsync("<h3>·Î±×ÀÎ ¿Ï·á</h3>");
+    await context.Response.WriteAsync("<h3>ë¡œê·¸ì¸ ì™„ë£Œ</h3>");
 });
 #endregion
 
@@ -80,14 +81,14 @@ app.MapGet("/Login", async context =>
 {
     var claims = new List<Claim>
     {
-            new Claim(ClaimTypes.Name, "¾ÆÀÌµğ")
+            new Claim(ClaimTypes.Name, "ì•„ì´ë””")
     };
 
     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
     await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-    await context.Response.WriteAsync("<h3>·Î±×ÀÎ ¿Ï·á</h3>");
+    await context.Response.WriteAsync("<h3>ë¡œê·¸ì¸ ì™„ë£Œ</h3>");
 });
 #endregion
 
@@ -98,19 +99,19 @@ app.MapGet("/InfoDetails", async context =>
 
     if (context.User.Identity.IsAuthenticated)
     {
-        result += $"<h3>·Î±×ÀÎ ÀÌ¸§: {context.User.Identity.Name}</h3>";
+        result += $"<h3>ë¡œê·¸ì¸ ì´ë¦„: {context.User.Identity.Name}</h3>";
         foreach (var claim in context.User.Claims)
         {
             result += $"{claim.Type} = {claim.Value}<br />";
         }
         if (context.User.IsInRole("Administrators") && context.User.IsInRole("Users"))
         {
-            result += "<br />Administrators + Users ±ÇÇÑÀÌ ÀÖ½À´Ï´Ù.<br />";
+            result += "<br />Administrators + Users ê¶Œí•œì´ ìˆìŠµë‹ˆë‹¤.<br />";
         }
     }
     else
     {
-        result += "<h3>·Î±×ÀÎÇÏÁö ¾Ê¾Ò½À´Ï´Ù.</h3>";
+        result += "<h3>ë¡œê·¸ì¸í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.</h3>";
     }
 
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
@@ -125,11 +126,11 @@ app.MapGet("/Info", async context =>
 
     if (context.User.Identity.IsAuthenticated)
     {
-        result += $"<h3>·Î±×ÀÎ ÀÌ¸§: {context.User.Identity.Name}</h3>";
+        result += $"<h3>ë¡œê·¸ì¸ ì´ë¦„: {context.User.Identity.Name}</h3>";
     }
     else
     {
-        result += "<h3>·Î±×ÀÎÇÏÁö ¾Ê¾Ò½À´Ï´Ù.</h3>";
+        result += "<h3>ë¡œê·¸ì¸í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.</h3>";
     }
 
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
@@ -154,7 +155,7 @@ app.MapGet("/InfoJson", async context =>
         json += "{}";
     }
 
-    // MIME Å¸ÀÔÀ» JSON Çü½ÄÀ¸·Î º¯°æ 
+    // MIME íƒ€ì…ì„ JSON í˜•ì‹ìœ¼ë¡œ ë³€ê²½ 
     context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
     await context.Response.WriteAsync(json);
 });
@@ -167,7 +168,7 @@ app.MapGet("/Logout", async context =>
     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-    await context.Response.WriteAsync("<h3>·Î±×¾Æ¿ô ¿Ï·á</h3>");
+    await context.Response.WriteAsync("<h3>ë¡œê·¸ì•„ì›ƒ ì™„ë£Œ</h3>");
 });
 #endregion
 
@@ -175,7 +176,7 @@ app.MapControllers(); // app.MapDefaultControllerRoute();
 app.Run();
 
 #region DTO
-// ÄÁÆ®·Ñ·¯ ¹× DTO Å¬·¡½º
+// ì»¨íŠ¸ë¡¤ëŸ¬ ë° DTO í´ë˜ìŠ¤
 public class ClaimDto
 {
     public string Type { get; set; }
@@ -189,14 +190,14 @@ public class ClaimDto
 public class LandingController : Controller
 {
     [HttpGet]
-    public IActionResult Index() => Content("´©±¸³ª Á¢±Ù °¡´É");
+    public IActionResult Index() => Content("ëˆ„êµ¬ë‚˜ ì ‘ê·¼ ê°€ëŠ¥");
 
     [Authorize]
     [HttpGet("/Greeting")]
     public IActionResult Greeting()
     {
-        var roleName = HttpContext.User.IsInRole("Administrators") ? "°ü¸®ÀÚ" : "»ç¿ëÀÚ";
-        return Content($"<em>{roleName}</em> ´Ô, ¹İ°©½À´Ï´Ù.", "text/html", Encoding.Default);
+        var roleName = HttpContext.User.IsInRole("Administrators") ? "ê´€ë¦¬ì" : "ì‚¬ìš©ì";
+        return Content($"<em>{roleName}</em> ë‹˜, ë°˜ê°‘ìŠµë‹ˆë‹¤.", "text/html", Encoding.Default);
     }
 }
 
@@ -205,7 +206,7 @@ public class LandingController : Controller
 public class DashboardController : Controller
 {
     [HttpGet]
-    public IActionResult Index() => Content("°ü¸®ÀÚ ´Ô, ¹İ°©½À´Ï´Ù.");
+    public IActionResult Index() => Content("ê´€ë¦¬ì ë‹˜, ë°˜ê°‘ìŠµë‹ˆë‹¤.");
 }
 #endregion
 
