@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -220,8 +221,10 @@ app.Run();
 // 컨트롤러 및 DTO 클래스
 public class ClaimDto
 {
-    public string Type { get; set; }
-    public string Value { get; set; }
+    [Required]
+    public string? Type { get; set; }
+    [Required]
+    public string? Value { get; set; }
 }
 #endregion
 
