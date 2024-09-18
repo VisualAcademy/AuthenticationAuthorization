@@ -28,7 +28,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization(); // [Authorize] 특성 사용
 
-#region Menu
+#region 0. Menu
 // 엔드포인트 및 라우트 설정
 app.MapGet("/", async context =>
 {
@@ -52,12 +52,100 @@ app.MapGet("/", async context =>
 });
 #endregion
 
-#region Login/{Username}
+#region 1. Login
+// "/Login" 경로로 GET 요청을 처리합니다.
+app.MapGet("/Login", async context =>
+{
+    // 클레임(Claim) 리스트를 생성하고 사용자 아이디 클레임을 추가합니다.
+    var claims = new List<Claim>
+    {
+            new Claim(ClaimTypes.Name, "아이디") // 사용자 이름(아이디) 클레임
+    };
+
+    // 쿠키 인증 스키마를 사용하여 클레임 아이덴티티를 생성합니다.
+    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+    // 클레임 아이덴티티를 사용하여 클레임 프린시펄을 생성합니다.
+    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+    // 사용자를 로그인 처리하고 쿠키 인증 스키마를 통해 인증합니다.
+    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+    // 응답 헤더의 "Content-Type"을 설정하여 한글 문자가 올바르게 표시되도록 합니다.
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+
+    // 클라이언트에 "로그인 완료" 메시지를 출력합니다.
+    await context.Response.WriteAsync("<h3>로그인 완료</h3>");
+});
+#endregion
+
+#region 2. Info
+// "/Info" 경로로 GET 요청을 처리합니다.
+app.MapGet("/Info", async context =>
+{
+    string result = "";
+
+    // 사용자가 인증되었는지 확인
+    if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
+    {
+        result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
+    }
+    else
+    {
+        result += "<h3>로그인하지 않았습니다.</h3>";
+    }
+
+    // 응답 헤더 설정
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync(result, Encoding.Default);
+});
+#endregion
+
+#region 3. InfoJson
+// "/InfoJson" 경로로 GET 요청을 처리합니다.
+app.MapGet("/InfoJson", async context =>
+{
+    string json = "";
+
+    // 사용자가 인증되었는지 확인
+    if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
+    {
+        // 사용자 클레임 정보를 JSON으로 직렬화
+        var claims = context.User.Claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value });
+        json += JsonSerializer.Serialize<IEnumerable<ClaimDto>>(
+            claims,
+            new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+    }
+    else
+    {
+        json += "{}";
+    }
+
+    // MIME 타입을 JSON 형식으로 변경
+    context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
+    await context.Response.WriteAsync(json);
+});
+#endregion
+
+#region 4. Logout
+// "/Logout" 경로로 GET 요청을 처리합니다.
+app.MapGet("/Logout", async context =>
+{
+    // 사용자를 로그아웃 처리합니다.
+    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+    // 응답 헤더 설정
+    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
+    await context.Response.WriteAsync("<h3>로그아웃 완료</h3>");
+});
+#endregion
+
+#region 5. Login/{Username}
 // "/Login/{Username}" 경로로 GET 요청을 처리합니다.
 app.MapGet("/Login/{Username}", async context =>
 {
     // URL에서 사용자 이름을 가져옵니다.
-    var username = context.Request.RouteValues["Username"].ToString();
+    var username = context.Request.RouteValues["Username"]?.ToString() ?? string.Empty;
 
     // 사용자 클레임 리스트를 생성합니다.
     var claims = new List<Claim>
@@ -90,41 +178,14 @@ app.MapGet("/Login/{Username}", async context =>
 });
 #endregion
 
-#region 1. Login
-// "/Login" 경로로 GET 요청을 처리합니다.
-app.MapGet("/Login", async context =>
-{
-    // 클레임(Claim) 리스트를 생성하고 사용자 아이디 클레임을 추가합니다.
-    var claims = new List<Claim>
-    {
-            new Claim(ClaimTypes.Name, "아이디") // 사용자 이름(아이디) 클레임
-    };
-
-    // 쿠키 인증 스키마를 사용하여 클레임 아이덴티티를 생성합니다.
-    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-    // 클레임 아이덴티티를 사용하여 클레임 프린시펄을 생성합니다.
-    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-    // 사용자를 로그인 처리하고 쿠키 인증 스키마를 통해 인증합니다.
-    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-
-    // 응답 헤더의 "Content-Type"을 설정하여 한글 문자가 올바르게 표시되도록 합니다.
-    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-
-    // 클라이언트에 "로그인 완료" 메시지를 출력합니다.
-    await context.Response.WriteAsync("<h3>로그인 완료</h3>");
-});
-#endregion
-
-#region InfoDetails
+#region 6. InfoDetails
 // "/InfoDetails" 경로로 GET 요청을 처리합니다.
 app.MapGet("/InfoDetails", async context =>
 {
     string result = "";
 
     // 사용자가 인증되었는지 확인
-    if (context.User.Identity.IsAuthenticated)
+    if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
     {
         result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
 
@@ -151,67 +212,6 @@ app.MapGet("/InfoDetails", async context =>
 });
 #endregion
 
-#region 2. Info
-// "/Info" 경로로 GET 요청을 처리합니다.
-app.MapGet("/Info", async context =>
-{
-    string result = "";
-
-    // 사용자가 인증되었는지 확인
-    if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
-    {
-        result += $"<h3>로그인 이름: {context.User.Identity.Name}</h3>";
-    }
-    else
-    {
-        result += "<h3>로그인하지 않았습니다.</h3>";
-    }
-
-    // 응답 헤더 설정
-    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-    await context.Response.WriteAsync(result, Encoding.Default);
-});
-#endregion
-
-#region InfoJson
-// "/InfoJson" 경로로 GET 요청을 처리합니다.
-app.MapGet("/InfoJson", async context =>
-{
-    string json = "";
-
-    // 사용자가 인증되었는지 확인
-    if (context.User.Identity is not null && context.User.Identity.IsAuthenticated)
-    {
-        // 사용자 클레임 정보를 JSON으로 직렬화
-        var claims = context.User.Claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value });
-        json += JsonSerializer.Serialize<IEnumerable<ClaimDto>>(
-            claims,
-            new JsonSerializerOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-    }
-    else
-    {
-        json += "{}";
-    }
-
-    // MIME 타입을 JSON 형식으로 변경
-    context.Response.Headers["Content-Type"] = "application/json; charset=utf-8";
-    await context.Response.WriteAsync(json);
-});
-#endregion
-
-#region Logout
-// "/Logout" 경로로 GET 요청을 처리합니다.
-app.MapGet("/Logout", async context =>
-{
-    // 사용자를 로그아웃 처리합니다.
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-    // 응답 헤더 설정
-    context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-    await context.Response.WriteAsync("<h3>로그아웃 완료</h3>");
-});
-#endregion
-
 // 컨트롤러 맵핑
 app.MapControllers(); // app.MapDefaultControllerRoute();
 app.Run();
@@ -225,7 +225,7 @@ public class ClaimDto
 }
 #endregion
 
-#region MVC Controller
+#region 7. MVC Controller
 // MVC 컨트롤러 정의
 [AllowAnonymous]
 [Route("/Landing")]
@@ -252,7 +252,7 @@ public class DashboardController : Controller
 }
 #endregion
 
-#region Web API Controller
+#region 8. Web API Controller
 // Web API 컨트롤러 정의
 [ApiController]
 [Route("api/[controller]")]
