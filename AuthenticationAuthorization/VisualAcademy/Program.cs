@@ -211,6 +211,11 @@ app.MapGet("/InfoDetails", async context =>
     context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
     await context.Response.WriteAsync(result, Encoding.Default);
 });
+
+app.MapGet("/api/UserInfo", (HttpContext context) => 
+{
+    return $"안녕하세요. {context.User?.Identity?.Name}";
+});
 #endregion
 
 // 컨트롤러 맵핑
