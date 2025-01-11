@@ -1,12 +1,12 @@
-# ASP.NET Core 8.0 인증 및 권한 부여의 완전 가이드
+# ASP.NET Core 9.0 인증 및 권한 부여의 완전 가이드
 
-이 GitHub 리포지토리는 ASP.NET Core 8.0을 사용하여 인증 및 권한 부여를 구현하는 방법에 대한 전체적인 가이드를 제공합니다. 본 가이드는 핸즈온랩 형식으로 구성되어 있으며, ASP.NET Core 8.0 Empty 프로젝트를 기반으로 단계별 실습을 진행할 수 있도록 설계되었습니다.
+이 GitHub 리포지토리는 ASP.NET Core 9.0을 사용하여 인증 및 권한 부여를 구현하는 방법에 대한 전체적인 가이드를 제공합니다. 본 가이드는 핸즈온랩 형식으로 구성되어 있으며, ASP.NET Core 9.0 Empty 프로젝트를 기반으로 단계별 실습을 진행할 수 있도록 설계되었습니다.
 
 ## 리포지토리 정보
 이 리포지토리의 전체 소스 코드는 다음 링크에서 확인할 수 있습니다:
 - [AuthenticationAuthorization GitHub 리포지토리](https://github.com/VisualAcademy/AuthenticationAuthorization)
 
-핸즈온랩을 진행할 때는 ASP.NET Core 8.0 Empty 프로젝트를 생성하고, `Program.cs` 파일에 이 문서 마지막 부분에 제공되는 전체 소스 코드를 참고하여 단계별로 연습합니다.
+핸즈온랩을 진행할 때는 ASP.NET Core 8.0 또는 9.0 Empty 프로젝트를 생성하고, `Program.cs` 파일에 이 문서 마지막 부분에 제공되는 전체 소스 코드를 참고하여 단계별로 연습합니다.
 
 ## 강좌 내용
 본 강좌는 다음과 같은 주요 내용들을 다룹니다:
@@ -51,7 +51,7 @@
 5. 로그인 시 더 많은 `Claim` 저장 및 `IsInRole` 메서드로 권한 체크하는 방법 살펴보기
 6. 권한(Authorization) 관련 기능을 MVC와 Web API 컨트롤러에서 사용하는 데모
 
-이 가이드를 통해 ASP.NET Core 8.0에서 인증 및 권한 부여를 실제로 구현하는 방법을 자세히 배울 수 있습니다.
+이 가이드를 통해 ASP.NET Core 9.0에서 인증 및 권한 부여를 실제로 구현하는 방법을 자세히 배울 수 있습니다.
 
 ## ASP.NET Core 인증과 권한 관련 다음 강좌에 대한 소스 모음입니다.
 
